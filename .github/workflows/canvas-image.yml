@@ -1,6 +1,9 @@
 name: Build and publish Canvas image
 
 on:
+  push:
+    branches:
+      - ci/ghcr-multiarch-image
   workflow_dispatch:
     inputs:
       image_tag:
