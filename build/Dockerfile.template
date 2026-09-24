@@ -7,6 +7,7 @@ FROM 948781806214.dkr.ecr.us-east-1.amazonaws.com/docker.io/instructure/ruby-pas
 FROM instructure/ruby-passenger:$RUBY-jammy
 <% end -%>
 LABEL maintainer="Instructure"
+LABEL org.opencontainers.image.source="https://github.com/B2TA/canvas-lms"
 
 ARG RUBY
 ARG POSTGRES_CLIENT=14
@@ -94,6 +95,8 @@ RUN unset RUBY && bundle config --global build.nokogiri --use-system-libraries &
   bundle config --global build.ffi --enable-system-libffi && \
   bundle install
 RUN yarn install --frozen-lockfile || yarn install --frozen-lockfile --network-concurrency 1 && \
+  POSTGRES_PASSWORD=build-only \
+  ENCRYPTION_KEY=build-only-encryption-key \
   bin/rails canvas:compile_assets --trace && \
   rm -rf node_modules
 <% end -%>
